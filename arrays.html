@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Arrays</h1>
+    <script>
+        // Load html in browser and open the developer tool, all of the value will be available in global scope
+        var person = [];
+        person.name = 'Mrs. White';
+        var who = person.name;
+
+        who;
+        typeof person === 'array';
+        typeof person === 'object';
+
+        person[0] = 'I was not in the room';
+        // Directly use person[plea] = "I would never!"; will give error.
+        // Either use
+        person.plea = 'New value';
+        // Or
+        person['plea'] = 'Another value';
+    </script>
+</body>
+
+</html>
