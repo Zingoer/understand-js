@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS!</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <script>
+        var cl = console.log;
+        var ts = JSON.stringify;
+        var person = {};
+        person.name = 'Mrs. White';
+        cl(`person: ${ts(person)}`);
+
+        var person2 = {
+            "name": 'Mrs. WhiteWhite'
+        };
+        cl(`person2: ${ts(person2)}`);
+
+        var who = person.name;//Save primitive value by value
+        cl(`who: ${ts(who)}`);
+
+        person.name = 'Mr.Whatever';
+        cl(`person: ${ts(person)}`);
+        cl(`who: ${ts(who)}`);
+
+        cl(who.story);
+
+    </script>
+</body>
+</html>
