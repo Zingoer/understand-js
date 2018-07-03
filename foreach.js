@@ -36,9 +36,12 @@ const suspectsList = [],
 const _ = {
   each(list, callback) {
     if (Array.isArray(list)) {
+      // Loop through array
       for (let i = 0, length = list.length; i < length; i++) {
         callback(list[i]);
       }
+    }else{
+        
     }
   }
 };
