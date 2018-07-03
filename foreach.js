@@ -33,18 +33,21 @@ const suspectsList = [],
 
 // lodash or underscore is a library
 // _.each(list, howToProcessList()). "_" here is a object and it has a method each(list, func)
-const _ = {
-  each(list, callback) {
-    if (Array.isArray(list)) {
-      // Loop through array
-      for (let i = 0, length = list.length; i < length; i++) {
-        callback(list[i]);
-      }
-    }else{
-        
+const _ = {};
+
+_.each = function(list, callback){
+  if (Array.isArray(list)) {
+    // Loop through array
+    for (let i = 0, length = list.length; i < length; i++) {
+      // Value, index, list
+      callback(list[i], i, list);
     }
+  }else{
+    for(let key in list){
+      callback(list[key], key, list);
+    } 
   }
-};
+}
 
 _.each(suspects, val => console.log(val));
 
@@ -52,7 +55,9 @@ _.each(suspects, function(name) {
   suspectsList.push(createSuspectObject(name));
 });
 
-_.each(suspects, name => {
+_.each(suspects, (name, index, list) => {
   anotherList.push(createSuspectObject(name));
+  console.log(index);
+  console.log(list);
 });
 
