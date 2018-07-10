@@ -170,5 +170,88 @@ function scope() {
       console.log(`Outside fn, sameName: ${sameName}`);
       console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
     });
+
+    it("if an inner and an outer variable share the same name, and the name is referenced in the outer scope, the outer value binding will be used", function() {
+      var sameName = "outer";
+      var fn = function() {
+        var sameName = "inner";
+        console.log(`Inside fn, name: ${sameName}`);
+      };
+      fn();
+      ACTUAL = sameName;
+      console.log(`Outside fn, sameName: ${sameName}`);
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+    });
+
+    it("a new variable scope is created for every call to a function, as exemplified with a counter", function() {
+      var fn = function() {
+        // the `||` symbol here is being used to set a default value for innerCounter. If innerCounter already contains a truthy value, 
+        // then value is that variable will be unchanged. If it is falsey however (such as if it were completely uninitialized), 
+        // then this line will set it to the default value of 10.
+        var innerCounter = innerCounter || 10;
+        innerCounter = innerCounter + 1;
+        ACTUAL = innerCounter;
+        console.log(`Inside fn, innerCounter: ${innerCounter}, ACTUAL: ${ACTUAL}`);
+      };
+
+      // Every time a function is invoked, a new execution context, aka. scope will created and all the variables in that scope 
+      // gonna be initialized whatever they are
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+    });
+
+    it("a new variable scope is created for each call to a function, as exemplified with uninitialized string variables", function() {
+      // this is a longer form of the same observation as above, using strings instead of numbers.
+      var fn = function() {
+        var localVariable;
+        if (localVariable === undefined ){
+          // the variable will be initialized for the first time during this call to fn
+          ACTUAL = 'alpha';
+        } else if (localVariable === 'initialized') {
+          // the variable has already been initialized by a previous call to fn
+          ACTUAL = 'omega';
+        }
+        console.log(`Inside fn, localVariable: ${localVariable}, ACTUAL: ${ACTUAL}`);
+        localVariable = 'initialized';
+        console.log(`Inside fn, localVariable: ${localVariable}`);
+      };
+
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+    });
+
+    it("an inner function can access both its local scope variables and variables in its containing scope, provided the variables have different names", function() {
+      var outerName = 'outer';
+      var fn = function() {
+        var innerName = 'inner';
+        ACTUAL = innerName + outerName;
+        console.log(`Inside fn, outerName: ${outerName}, innerName, ${innerName}, ACTUAL: ${ACTUAL}`);
+      };
+
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+    });
+
+    it('between calls to an inner function, that inner function retains access to a variable in an outer scope. Modifying those variables has a lasting effect between class to the inner function.', function(){
+      var outerCounter = 10;
+      var fn = function() {
+        // Variation, try to give var here, the value will be NaN
+        // var outerCounter = outerCounter + 1;
+        // Variation, try to give let here, A error will throw
+        // let outerCounter = outerCounter + 1;
+        outerCounter = outerCounter + 1;
+        ACTUAL = outerCounter;
+        console.log(`Inside fn, outerCounter: ${outerCounter}, ACTUAL: ${ACTUAL}`);
+      };
+
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+      fn();
+      console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
+    });
   });
 })();
