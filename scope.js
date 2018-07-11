@@ -185,16 +185,18 @@ function scope() {
 
     it("a new variable scope is created for every call to a function, as exemplified with a counter", function() {
       var fn = function() {
-        // the `||` symbol here is being used to set a default value for innerCounter. If innerCounter already contains a truthy value, 
-        // then value is that variable will be unchanged. If it is falsey however (such as if it were completely uninitialized), 
+        // the `||` symbol here is being used to set a default value for innerCounter. If innerCounter already contains a truthy value,
+        // then value is that variable will be unchanged. If it is falsey however (such as if it were completely uninitialized),
         // then this line will set it to the default value of 10.
         var innerCounter = innerCounter || 10;
         innerCounter = innerCounter + 1;
         ACTUAL = innerCounter;
-        console.log(`Inside fn, innerCounter: ${innerCounter}, ACTUAL: ${ACTUAL}`);
+        console.log(
+          `Inside fn, innerCounter: ${innerCounter}, ACTUAL: ${ACTUAL}`
+        );
       };
 
-      // Every time a function is invoked, a new execution context, aka. scope will created and all the variables in that scope 
+      // Every time a function is invoked, a new execution context, aka. scope will created and all the variables in that scope
       // gonna be initialized whatever they are
       fn();
       console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
@@ -206,15 +208,17 @@ function scope() {
       // this is a longer form of the same observation as above, using strings instead of numbers.
       var fn = function() {
         var localVariable;
-        if (localVariable === undefined ){
+        if (localVariable === undefined) {
           // the variable will be initialized for the first time during this call to fn
-          ACTUAL = 'alpha';
-        } else if (localVariable === 'initialized') {
+          ACTUAL = "alpha";
+        } else if (localVariable === "initialized") {
           // the variable has already been initialized by a previous call to fn
-          ACTUAL = 'omega';
+          ACTUAL = "omega";
         }
-        console.log(`Inside fn, localVariable: ${localVariable}, ACTUAL: ${ACTUAL}`);
-        localVariable = 'initialized';
+        console.log(
+          `Inside fn, localVariable: ${localVariable}, ACTUAL: ${ACTUAL}`
+        );
+        localVariable = "initialized";
         console.log(`Inside fn, localVariable: ${localVariable}`);
       };
 
@@ -225,18 +229,20 @@ function scope() {
     });
 
     it("an inner function can access both its local scope variables and variables in its containing scope, provided the variables have different names", function() {
-      var outerName = 'outer';
+      var outerName = "outer";
       var fn = function() {
-        var innerName = 'inner';
+        var innerName = "inner";
         ACTUAL = innerName + outerName;
-        console.log(`Inside fn, outerName: ${outerName}, innerName, ${innerName}, ACTUAL: ${ACTUAL}`);
+        console.log(
+          `Inside fn, outerName: ${outerName}, innerName, ${innerName}, ACTUAL: ${ACTUAL}`
+        );
       };
 
       fn();
       console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
     });
 
-    it('between calls to an inner function, that inner function retains access to a variable in an outer scope. Modifying those variables has a lasting effect between class to the inner function.', function(){
+    it("between calls to an inner function, that inner function retains access to a variable in an outer scope. Modifying those variables has a lasting effect between class to the inner function.", function() {
       var outerCounter = 10;
       var fn = function() {
         // Variation, try to give var here, the value will be NaN
@@ -245,7 +251,9 @@ function scope() {
         // let outerCounter = outerCounter + 1;
         outerCounter = outerCounter + 1;
         ACTUAL = outerCounter;
-        console.log(`Inside fn, outerCounter: ${outerCounter}, ACTUAL: ${ACTUAL}`);
+        console.log(
+          `Inside fn, outerCounter: ${outerCounter}, ACTUAL: ${ACTUAL}`
+        );
       };
 
       fn();
@@ -254,4 +262,40 @@ function scope() {
       console.log(`Outside fn, ACTUAL: ${ACTUAL}`);
     });
   });
+
+  it("the rule about retaining access to variables from an outer scope still applies, even after the outer function call (that created the outer scope) has returned", function() {
+    var outerFn = function() {
+      // NOTE: the contents of this function is the same as the entire body of the previous test
+
+      // if counterInOuterScope is use 'var', then the console.log will give undefined
+      // However if use 'let', then a error will give with explicit reminding
+      // console.log(counterInOuterScope); //undefined
+      var counterInOuterScope = 10;
+
+      var innerIncrementingFn = function() {
+        counterInOuterScope = counterInOuterScope + 1;
+        ACTUAL = counterInOuterScope;
+        console.log(`Inside innerIncrementingFn, counterInOuterScope: ${counterInOuterScope}, ACTUAL: ${ACTUAL}`);
+      };
+
+      innerIncrementingFn();
+      console.log(`Inside innerIncrementingFn, ACTUAL: ${ACTUAL}`);
+      innerIncrementingFn();
+      console.log(`Inside innerIncrementingFn, ACTUAL: ${ACTUAL}`);
+      // Here, we retain a reference to the newly created inner function for later, by assigning it to the global scope (window)
+      window.retainedInnerFn = innerIncrementingFn;
+    };
+
+    // before we run outerFn, there will be no innerFn exported to the global scope
+    console.log(`Outside outerFn, retainedInnerFn: ${window.retainedInnerFn}`);//undefined
+    // running this outer function should have the same effect as running the whole previous test, with the addition of placing the innerFn somewhere that we can reach it after outerFn has returned
+    outerFn();
+    console.log(`Outside outerFn, retainedInnerFn: ${window.retainedInnerFn}`);//function
+    window.retainedInnerFn();
+    console.log(`Outside outerFn, ACTUAL: ${ACTUAL}`);//13
+    // Because it still runs inside the outerFn's scope, so it can access outerFn's variables
+  });
+
 })();
+
+// The appropriate time to use 'let' is when you want to scope your variable inside of a block that's not a function.
