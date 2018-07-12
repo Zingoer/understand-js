@@ -40,28 +40,37 @@ ifElse(
 
 const cl = console.log;
 
-const increment = n => {return n + 1;};
-const square = n => {return n * n;};
+const increment = n => {
+  return n + 1;
+};
+const square = n => {
+  return n * n;
+};
 
-const doMathSoIDontHaveTo = (n, func) => {return func(n)};
+const doMathSoIDontHaveTo = (n, func) => {
+  return func(n);
+};
 cl(doMathSoIDontHaveTo(5, square));
 cl(doMathSoIDontHaveTo(4, increment));
 
 // Passing args ES6
 const ifElse2 = (condition, isTrue, isFalse, parameters) => {
-    return condition ? isTrue(parameters) : isFalse(parameters);
-  };
+  return condition ? isTrue(parameters) : isFalse(parameters);
+};
 // or
 const ifElse3 = (condition, isTrue, isFalse, ...args) => {
-    return condition ? isTrue(args) : isFalse(argsargs);
-  };
+  return condition ? isTrue(args) : isFalse(argsargs);
+};
 
 // ES5 ??
-const ifElse4 = function(condition, isTrue, isFalse){
-    const args = [].slice.call(arguments, 3);
-    debugger;
-    return condition ? isTrue.apply(this, args) : isFalse.apply(this, args);
-  };
+const ifElse4 = function(condition, isTrue, isFalse) {
+  const args = [].slice.call(arguments, 3);
+  return condition ? isTrue.apply(null, args) : isFalse.apply(null, args);
+};
 
-  const logTrue = (msgs) => {console.log(msgs)}
-  const logFalse = (msgs) => {console.log(msgs)}
+const logTrue = msgs => {
+  console.log(msgs);
+};
+const logFalse = msgs => {
+  console.log(msgs);
+};
