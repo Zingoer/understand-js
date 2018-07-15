@@ -33,6 +33,7 @@ __.forEachRight = (collection, callback) => {
     }
 };
 
+
 const newDevelopment = [
   {
       name: 'Miss Scarlet',
@@ -83,3 +84,20 @@ const newDevelopment = [
       ]
   }
 ];
+
+// Get the room that suspects never go to, which in this case is ballroom
+//Solution 1
+// _.intersection(..._.map(newDevelopment, (suspect) => {
+//   return _.reduce(suspect.rooms, (accumulator, room) => {
+//     // get first value of the property
+//     const key = _.keys(room)[0];
+//     const value = room[key];
+//     // if false, add the key into the array
+//     if(value === false){
+//       accumulator.push(key);
+//     } 
+//     return accumulator;
+//   }, []);
+// }))
+//
+
